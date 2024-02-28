@@ -120,16 +120,19 @@ def using_playwright(url):
     
 
 if __name__=="__main__":
+    url = "https://www.amazon.com/"   # protected by text captcha
     # url = "https://www.zillow.com/"   # protected by human click&hold verification
     # url = "https://bookoutlet.com/"   # protected by cloudflare
-    url = "https://www.amazon.com/"
+    
 
     #functions = [using_requests,using_requests_html, using_httpx, using_cloudscraper, using_hrequests, using_curl, using_stealth]
-    # using_requests(url)
-    # using_requests_html(url)
-    # using_httpx(url)
-    # using_curl(url,"chrome120")
-    # using_cloudscraper(url)
-    # using_hrequests(url)
-    # using_stealth(url)
+
+    # update : requests-html is often bugging, httpx is better than requests
+    #using_requests(url)
+    #using_requests_html(url)
+    using_httpx(url)
+    using_curl(url,"chrome120")
+    using_cloudscraper(url)
+    using_hrequests(url)
+    using_stealth(url)
     using_playwright(url)
