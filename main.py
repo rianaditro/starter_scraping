@@ -14,6 +14,7 @@ import httpx
 def save_to(content,filename):
     with open(filename,"w") as file:
         file.write(content)
+    #print(f"saved to {filename}")
 
 def find_title(html):
     soup = BeautifulSoup(html,"html.parser")
@@ -40,7 +41,7 @@ def using_requests_html(url):
     html = r.html.html
     print(f"get {r.status_code} using requests-html")
     if r.status_code == 200:
-        find_title(r.text)
+        find_title(html)
         save_to(html,"requests-html.html")
 
 def using_httpx(url):
@@ -51,28 +52,30 @@ def using_httpx(url):
         save_to(r.text,"httpx.html")
 
 def using_hrequests(url):
-    session = hrequests.Session(browser="firefox")
+    session = hrequests.BrowserSession(browser="firefox",mock_human=True,headless=False)
     resp = session.get(url)
     print(f"get {resp.status_code} using hrequests")
     if resp.status_code == 200:
-        page = resp.render(mock_human=True).text
-        find_title(page)
-        save_to(page,"hrequests.html")
+        html = resp.html.html
+        find_title(html)
+        save_to(html,"hrequests.html")
 
 def using_curl(url,impersonate):
     # Use the latest impersonate versions, findout here:
     # https://github.com/yifeikong/curl-impersonate?tab=readme-ov-file#supported-browsers
     
     r = req_curl.get(url,impersonate=impersonate)
-    if r.text:
-        find_title(r.text)
+    print(f"get {r} using curl")
+    if r.status_code == 200:
+        find_title(f"{r.text} using curl")
         save_to(r.text,"curl.html")
 
 def using_cloudscraper(url):
     scraper = cloudscraper.create_scraper()
     r = scraper.get(url)
-    if r.text:
-        find_title(r.text)
+    print(f"get {r.status_code} using cloudscraper")
+    if r.status_code == 200:
+        find_title(f"{r.text} using cloudscraper")
         save_to(r.text,"cloudscraper.html")
 
 def using_stealth(url):
@@ -96,7 +99,7 @@ def using_stealth(url):
     time.sleep(5)
     driver.quit()
     if html:
-        find_title(html)
+        find_title(f"{html} using selenium stealth")
         save_to(html,"selenium_stealth.html")
 
 
