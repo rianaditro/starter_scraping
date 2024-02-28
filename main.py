@@ -3,6 +3,7 @@ from requests_html import HTMLSession
 from curl_cffi import requests as req_curl
 from selenium import webdriver
 from selenium_stealth import stealth
+from playwright.sync_api import sync_playwright
 
 import time
 import cloudscraper
@@ -52,7 +53,8 @@ def using_httpx(url):
         save_to(r.text,"httpx.html")
 
 def using_hrequests(url):
-    session = hrequests.BrowserSession(browser="firefox",mock_human=True,headless=False)
+    # headless browsing should false if want to bypass zillow
+    session = hrequests.BrowserSession(browser="firefox",mock_human=True)
     resp = session.get(url)
     print(f"get {resp.status_code} using hrequests")
     if resp.status_code == 200:
@@ -98,20 +100,36 @@ def using_stealth(url):
     html = driver.page_source
     time.sleep(5)
     driver.quit()
+    print("get html using selenium stealth")
     if html:
         find_title(f"{html} using selenium stealth")
         save_to(html,"selenium_stealth.html")
 
+def using_playwright(url):
+    pw = sync_playwright().start()
+    brows = pw.chromium.launch()
+    page = brows.new_page()
+    page.goto(url)
+    print(f"get html using playwright")
+    if page.content():
+        html = page.content()
+        find_title(html)
+        save_to(html,"playwright.html")
+    brows.close()
+    pw.stop()
+    
 
 if __name__=="__main__":
-    url = "https://www.zillow.com/"
+    # url = "https://www.zillow.com/"   # protected by human click&hold verification
+    # url = "https://bookoutlet.com/"   # protected by cloudflare
+    url = "https://www.amazon.com/"
 
     #functions = [using_requests,using_requests_html, using_httpx, using_cloudscraper, using_hrequests, using_curl, using_stealth]
-    using_requests(url)
-    using_requests_html(url)
-    using_httpx(url)
-    using_curl(url,"chrome120")
-    using_cloudscraper(url)
-    using_hrequests(url)
-    using_stealth(url)
-    
+    # using_requests(url)
+    # using_requests_html(url)
+    # using_httpx(url)
+    # using_curl(url,"chrome120")
+    # using_cloudscraper(url)
+    # using_hrequests(url)
+    # using_stealth(url)
+    using_playwright(url)
