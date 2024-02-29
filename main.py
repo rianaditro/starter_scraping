@@ -28,6 +28,7 @@ def using_requests(url):
     if r.status_code == 200:
         find_title(r.text)
         save_to(r.text,"requests.html")
+    return r.text
 
 def using_requests_html(url):
     # first run will do
@@ -44,6 +45,7 @@ def using_requests_html(url):
     if r.status_code == 200:
         find_title(html)
         save_to(html,"requests-html.html")
+    return html
 
 def using_httpx(url):
     r = httpx.get(url)
@@ -51,6 +53,7 @@ def using_httpx(url):
     if r.status_code == 200:
         find_title(r.text)
         save_to(r.text,"httpx.html")
+    return r.text
 
 def using_hrequests(url):
     # headless browsing should false if want to bypass zillow
@@ -61,6 +64,7 @@ def using_hrequests(url):
         html = resp.html.html
         find_title(html)
         save_to(html,"hrequests.html")
+    return html
 
 def using_curl(url,impersonate):
     # Use the latest impersonate versions, findout here:
@@ -71,6 +75,7 @@ def using_curl(url,impersonate):
     if r.status_code == 200:
         find_title(f"{r.text} using curl")
         save_to(r.text,"curl.html")
+    return r.text
 
 def using_cloudscraper(url):
     scraper = cloudscraper.create_scraper()
@@ -79,6 +84,7 @@ def using_cloudscraper(url):
     if r.status_code == 200:
         find_title(f"{r.text} using cloudscraper")
         save_to(r.text,"cloudscraper.html")
+    return r.text
 
 def using_stealth(url):
     options = webdriver.ChromeOptions()
@@ -104,6 +110,7 @@ def using_stealth(url):
     if html:
         find_title(f"{html} using selenium stealth")
         save_to(html,"selenium_stealth.html")
+    return html
 
 def using_playwright(url):
     pw = sync_playwright().start()
