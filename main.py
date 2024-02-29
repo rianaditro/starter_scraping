@@ -111,19 +111,22 @@ def using_playwright(url):
     page = brows.new_page()
     page.goto(url)
     print(f"get html using playwright")
+    time.sleep(5)
     if page.content():
         html = page.content()
         find_title(html)
         save_to(html,"playwright.html")
     brows.close()
     pw.stop()
+    return html
     
 
 if __name__=="__main__":
-    url = "https://www.amazon.com/"   # protected by text captcha
+    # url = "https://www.amazon.com/"   # protected by text captcha
     # url = "https://www.zillow.com/"   # protected by human click&hold verification
     # url = "https://bookoutlet.com/"   # protected by cloudflare
-    
+
+    url = "https://www.nrl.com/players/?competition=111"
 
     #functions = [using_requests,using_requests_html, using_httpx, using_cloudscraper, using_hrequests, using_curl, using_stealth]
 
